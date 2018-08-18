@@ -3,8 +3,8 @@ const Service = require("egg").Service;
 class UserService extends Service {
   async register(info) {
     return await this.app.mysql.query(
-      "INSERT INTO `user`(`name`,`password`) VALUES(?,?)",
-      [info.name, info.password]
+      "INSERT INTO `user`(`name`,`password`,`role`) VALUES(?,?,?)",
+      [info.name, info.password, info.role]
     );
   }
   async selectUserFromName(name) {
@@ -15,13 +15,13 @@ class UserService extends Service {
   }
   async selectUserFromId(id) {
     return await this.app.mysql.query(
-      "SELECT id,name FROM `user` WHERE id = ?",
+      "SELECT id,name,role FROM `user` WHERE id = ?",
       id
     );
   }
   async authUser(info) {
     return await this.app.mysql.query(
-      "SELECT id ,name FROM `user` WHERE name = ? AND password = ? ",
+      "SELECT id,name FROM `user` WHERE name = ? AND password = ? ",
       [info.name, info.password]
     );
   }
