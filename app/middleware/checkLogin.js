@@ -1,8 +1,13 @@
 module.exports = options => {
   return async function checkLogin(ctx, next) {
-    await next();
+    console.log(ctx.session, 123);
     if (ctx.session.userId) {
-      ctx.isLogin = true;
+      await next();
+    } else {
+      ctx.body = {
+        code: 1002,
+        msg: "请登录"
+      };
     }
   };
 };
