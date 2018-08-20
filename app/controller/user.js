@@ -5,8 +5,8 @@ const Controller = require("egg").Controller;
 class UserController extends Controller {
   async info() {
     let code, msg, data;
-    const { ctx, constants } = this;
-    const { success } = constants.code;
+    const { ctx, app } = this;
+    const { success } = app.constants.code;
     const user = ctx.user;
     if (user) {
       (code = success), (msg = "登录成功"), (data = user);
@@ -19,8 +19,8 @@ class UserController extends Controller {
   }
   async register() {
     let code, msg, data;
-    const { ctx, constants } = this;
-    const { success, fail, error } = constants.code;
+    const { ctx, app } = this;
+    const { success, fail, error } = app.constants.code;
     const { visitor } = constants.role;
     const requsetBody = ctx.request.body;
     const hasUser = await ctx.service.user.selectUserFromName(requsetBody.name);
@@ -43,8 +43,8 @@ class UserController extends Controller {
   }
   async login() {
     let code, msg, data;
-    const { ctx, constants } = this;
-    const { success, fail } = constants.code;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
     const requsetBody = ctx.request.body;
     const result = await ctx.service.user.authUser(requsetBody);
     if (result) {
