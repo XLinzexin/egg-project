@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80012
 File Encoding         : 65001
 
-Date: 2018-08-21 16:28:54
+Date: 2018-08-21 20:30:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,6 +33,23 @@ CREATE TABLE `article` (
 INSERT INTO `article` VALUES ('1', '123', '<p ><br></p>', '1');
 INSERT INTO `article` VALUES ('2', '123', '<p ><br></p>', '1');
 INSERT INTO `article` VALUES ('3', '这是一篇正式的文章', '<p >正经人写的正经文章</p>', '1');
+
+-- ----------------------------
+-- Table structure for article_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `article_comment`;
+CREATE TABLE `article_comment` (
+  `id` int(40) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(255) NOT NULL,
+  `userId` int(40) NOT NULL,
+  `articleId` int(40) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of article_comment
+-- ----------------------------
+INSERT INTO `article_comment` VALUES ('1', '123', '1', '3');
 
 -- ----------------------------
 -- Table structure for user

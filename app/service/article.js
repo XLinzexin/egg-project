@@ -25,6 +25,17 @@ class ArticleService extends Service {
       id
     );
   }
+  async createComment(info) {
+    return await this.app.mysql.query(
+      "INSERT INTO `article_comment`(`userId`,`comment`,`articleId`) VALUES(?,?,?)",
+      [info.userId, info.comment, info.id]
+    );
+  }
+  async getArticleCommentList(info) {
+    return await this.app.mysql.query(
+      "SELECT id,comment,userId,articleId,targetId FROM `article_comment` WHERE articleId = ? LIMIT ?,?"
+    );
+  }
 }
 
 module.exports = ArticleService;

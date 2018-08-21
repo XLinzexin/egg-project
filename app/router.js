@@ -12,4 +12,9 @@ module.exports = app => {
   router.post("/article", checkLogin, controller.article.create);
   router.get("/article", controller.article.list);
   router.get("/article/:id", controller.article.detail);
+  router.post(
+    "/article/:id/comment",
+    checkLogin,
+    controller.article.createComment
+  );
 };

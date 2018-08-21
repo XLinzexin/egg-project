@@ -62,13 +62,41 @@ class ArticleController extends Controller {
     const { isArray } = ctx.helper;
     const { article } = ctx.service;
     const articleDetail = await article.getArticleDetail(id);
-    if (isArray(articleDetail)) {
+    const comment = await article.getArticleCommentList({
+      page: 1,
+      pageSize: 4
+    });
+    if (isArray(articleDetail) && isArray(comment)) {
       code = success;
       msg = "请求成功";
       data = articleDetail[0];
     } else {
       code = fail;
       msg = "请求失败";
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
+  async createComment() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id } = ctx.params;
+    const { article } = ctx.service;
+    const userId = ctx.user.id;
+    const { comment } = ctx.request.body;
+    const result = await article.createComment({
+      userId,
+      comment,
+      id
+    });
+    if (result.insertId) {
+      (code = success), (msg = "请求成功");
+    } else {
+      (code = fail), (msg = "请求失败");
     }
     ctx.body = {
       code,
