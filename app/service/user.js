@@ -15,7 +15,7 @@ class UserService extends Service {
   }
   async selectUserFromId(id) {
     return await this.app.mysql.query(
-      "SELECT id,name,role FROM `user` WHERE id = ?",
+      "SELECT name,role FROM `user` WHERE id = ?",
       id
     );
   }

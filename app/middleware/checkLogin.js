@@ -8,6 +8,7 @@ module.exports = options => {
       if (result) {
         const user = result[0];
         if (user) {
+          user.id = userId;
           ctx.user = user;
           await next();
         } else {
