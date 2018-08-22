@@ -63,13 +63,19 @@ class ArticleController extends Controller {
     const { article } = ctx.service;
     const articleDetail = await article.getArticleDetail(id);
     const comment = await article.getArticleCommentList({
+      articleId: id,
       page: 1,
-      pageSize: 4
+      pageSize: 4,
+      dialogueCount: 3
     });
     if (isArray(articleDetail) && isArray(comment)) {
       code = success;
       msg = "请求成功";
       data = articleDetail[0];
+      data.comment = comment;
+      if (ctx.user.id === data.userId) {
+        data.isOwner = true;
+      }
     } else {
       code = fail;
       msg = "请求失败";
@@ -97,6 +103,34 @@ class ArticleController extends Controller {
       (code = success), (msg = "请求成功");
     } else {
       (code = fail), (msg = "请求失败");
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
+  async commentList() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id } = ctx.params;
+    const { page = 0, pageSize = 20, dialogueCount = 0 } = ctx.query;
+    const { isArray } = ctx.helper;
+    const { article } = ctx.service;
+    const comment = await article.getArticleCommentList({
+      articleId: id,
+      page,
+      pageSize,
+      dialogueCount
+    });
+    if (isArray(comment)) {
+      code = success;
+      msg = "请求成功";
+      data.list = comment;
+    } else {
+      code = fail;
+      msg = "请求失败";
     }
     ctx.body = {
       code,
