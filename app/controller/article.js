@@ -16,6 +16,7 @@ class ArticleController extends Controller {
     });
     if (result.insertId) {
       (code = success), (msg = "请求成功");
+      data = result.insertId;
     } else {
       (code = fail), (msg = "请求失败");
     }
@@ -61,20 +62,50 @@ class ArticleController extends Controller {
     const { id } = ctx.params;
     const { isArray } = ctx.helper;
     const { article } = ctx.service;
-    const articleDetail = await article.getArticleDetail(id);
+    const articleContent = await article.getArticleContent(id);
     const comment = await article.getArticleCommentList({
       articleId: id,
       page: 1,
       pageSize: 4,
       dialogueCount: 3
     });
-    if (isArray(articleDetail) && isArray(comment)) {
+    if (isArray(articleContent) && isArray(comment)) {
       code = success;
       msg = "请求成功";
-      data = articleDetail[0];
+      data = articleContent[0];
       data.comment = comment;
       if (ctx.user.id === data.userId) {
         data.isOwner = true;
+      }
+    } else {
+      code = fail;
+      msg = "请求失败";
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
+  async delete() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id } = ctx.params;
+    const { isArray } = ctx.helper;
+    const { article } = ctx.service;
+    const articleContent = await article.getArticleContent(id);
+    if (isArray(articleContent)) {
+      const userId = ctx.user.id;
+      if (userId === articleContent[0].userId) {
+        const result = await article.deleteArticle(id);
+        if (result.affectedRows) {
+          code = success;
+          msg = "修改成功";
+        }
+      } else {
+        code = fail;
+        msg = "不是文章的发布者！";
       }
     } else {
       code = fail;
@@ -128,6 +159,63 @@ class ArticleController extends Controller {
       code = success;
       msg = "请求成功";
       data.list = comment;
+    } else {
+      code = fail;
+      msg = "请求失败";
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
+  async content() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id } = ctx.params;
+    const { isArray } = ctx.helper;
+    const { article } = ctx.service;
+    const articleContent = await article.getArticleContent(id);
+    if (isArray(articleContent)) {
+      code = success;
+      msg = "请求成功";
+      data = articleContent[0];
+    } else {
+      code = fail;
+      msg = "请求失败";
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
+  async modifyContent() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id } = ctx.params;
+    const { isArray } = ctx.helper;
+    const { article } = ctx.service;
+    const { title, content } = ctx.request.body;
+    const articleContent = await article.getArticleContent(id);
+    if (isArray(articleContent)) {
+      const userId = ctx.user.id;
+      if (userId === articleContent[0].userId) {
+        const result = await article.modifyArticleContent({
+          content,
+          title,
+          id
+        });
+        if (result.affectedRows) {
+          code = success;
+          msg = "修改成功";
+        }
+      } else {
+        code = fail;
+        msg = "不是文章的发布者！";
+      }
     } else {
       code = fail;
       msg = "请求失败";

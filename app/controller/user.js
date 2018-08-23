@@ -21,10 +21,11 @@ class UserController extends Controller {
     let code, msg, data;
     const { ctx, app } = this;
     const { success, fail, error } = app.constants.code;
-    const { visitor } = constants.role;
+    const { isArray } = ctx.helper;
+    const { visitor } = app.constants.role;
     const requsetBody = ctx.request.body;
-    const hasUser = await ctx.service.user.selectUserFromName(requsetBody.name);
-    if (hasUser) {
+    const user = await ctx.service.user.selectUserFromName(requsetBody.name);
+    if (isArray(user) && user.length) {
       (code = fail), (msg = "该用户已注册");
     } else {
       requsetBody.role = visitor;

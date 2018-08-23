@@ -14,17 +14,31 @@ class ArticleService extends Service {
   //文章列表
   async getArticleList(info) {
     return await this.app.mysql.query(
-      "SELECT title,content,id FROM `article` LIMIT ?,? ",
+      "SELECT title,content,id FROM `article` WHERE deleted = 0 LIMIT ?,? ",
       [
         (info.page > 0 ? info.page - 1 : 0) * info.pageSize,
         Number(info.pageSize)
       ]
     );
   }
-  // 文章详情
-  async getArticleDetail(id) {
+  // 文章内容
+  async getArticleContent(id) {
     return await this.app.mysql.query(
       "SELECT id,title,content,userId FROM `article` WHERE id = ?",
+      id
+    );
+  }
+  // 修改文章内容
+  async modifyArticleContent(info) {
+    return await this.app.mysql.query(
+      "UPDATE `article` SET title = ?, content = ? WHERE id = ?",
+      [info.title, info.content, info.id]
+    );
+  }
+  //删除文章（逻辑删除）
+  async deleteArticle(id) {
+    return await this.app.mysql.query(
+      "UPDATE `article` SET deleted = 1 WHERE id =?",
       id
     );
   }
