@@ -26,4 +26,5 @@ module.exports = app => {
     checkLogin,
     controller.article.modifyContent
   ); // 修改文章内容
+  router.get("/label/article", controller.label.article);
 };
