@@ -141,6 +141,27 @@ class ArticleController extends Controller {
       msg
     };
   }
+  async deleteComment() {
+    let code, msg, data;
+    const { ctx, app } = this;
+    const { success, fail } = app.constants.code;
+    const { id, commentId } = ctx.params;
+    const { article } = ctx.service;
+    const result = await article.deleteComment({
+      id,
+      commentId
+    });
+    if (result.insertId) {
+      (code = success), (msg = "请求成功");
+    } else {
+      (code = fail), (msg = "请求失败");
+    }
+    ctx.body = {
+      code,
+      data,
+      msg
+    };
+  }
   async commentList() {
     let code, msg, data;
     const { ctx, app } = this;
@@ -158,7 +179,9 @@ class ArticleController extends Controller {
     if (isArray(comment)) {
       code = success;
       msg = "请求成功";
-      data.list = comment;
+      data = {
+        list: comment
+      };
     } else {
       code = fail;
       msg = "请求失败";

@@ -20,11 +20,15 @@ module.exports = app => {
     controller.article.createComment
   ); //生成文章评论
   router.get("/article/:id/comment", controller.article.commentList); //文章评论
+  router.delete(
+    "/article/:id/comment/:commentId",
+    controller.article.deleteComment
+  );
   router.get("/article/:id/content", controller.article.content); //文章内容
   router.put(
     "/article/:id/content",
     checkLogin,
     controller.article.modifyContent
   ); // 修改文章内容
-  router.get("/label/article", controller.label.article);
+  router.get("/articleLable", controller.articleLable.list); //和文章相关的标签
 };
