@@ -32,3 +32,4 @@ module.exports = app => {
   ); // 修改文章内容
   router.get("/articleLable", controller.articleLable.list); //和文章相关的标签
 };
+console.log(123)
